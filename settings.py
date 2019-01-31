@@ -150,8 +150,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     #'django.contrib.sites',
     ## needed for queues
-    'djcelery',
-    'kombu.transport.django',
     ## in Django 1.7 we now use built-in migrations, no more south
     ## 'south',
     ## HELIOS stuff
@@ -268,17 +266,11 @@ logging.basicConfig(
 )
 
 
-# set up django-celery
-# BROKER_BACKEND = "kombu.transport.DatabaseTransport"
-BROKER_URL = "django://"
-CELERY_RESULT_DBURI = DATABASES['default']
-import djcelery
-djcelery.setup_loader()
+# set up celery
+CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_TASK_ALWAYS_EAGER = True
+#database_url = DATABASES['default']
 
-
-# for testing
-TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
-# this effectively does CELERY_ALWAYS_EAGER = True
 
 # Rollbar Error Logging
 ROLLBAR_ACCESS_TOKEN = get_from_env('ROLLBAR_ACCESS_TOKEN', None)
